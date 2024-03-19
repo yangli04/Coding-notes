@@ -1,0 +1,19 @@
+Downloading and processing multiple NCBI SRA samples
+To download a list of SRR files (such as for all of the samples of a data series) from NCBI, use NCBI's 'prefetch'.
+
+Given a set of SRA files (by SRR ID) listed in a single column in the text file "SraAccList.txt" (e.g. SRR7623010, SRR7623011, etc.), the following command will download the entire set:
+
+prefetch -O output_directory --option-file SRR_Acc_List.txt
+If you don't specify an output directory, the SRR files will be downloaded to ~/ncbi/ncbi_public/sra (or your configured "Import Path" as described above).
+
+To get this list of SRR IDs, go the ​SRA Run Selector and enter a project accession. Once on a ​project page, go to the "Select" section and click on "Accession List" to get 'SRR_Acc_List.txt' (or if you want a subset of these, click on "Metadata" in the "Select" section to get a comma separated file, 'SraRunTable.txt' and create your own 'SRR_Acc_List.txt'). Or you can go to the ​Downloading SRA data page, enter a list of SRX (experimental accession) IDs, and get a list of SRR (sample) accessions for 'SRR_Acc_List.txt'.
+
+The 'prefetch' command will provide you with a set of SRA files which then need to be converted to fastq.gz. One way to do this on the set of SRA files is
+
+find -name \*.sra -exec bsub fastq-dump --split-3 --gzip {} \;
+Once you create the fastq.gz files, the *.sra files can be deleted.
+
+
+
+Reference: [modified from here]
+http://barcwiki.wi.mit.edu/wiki/SOPs/qc_SRA#multiple
