@@ -1,1 +1,1 @@
-for i in $(ls *.fastq.gz); do mv $i $(sed "s/S[0-9][0-9]/S1/" <(echo $i)); done
+for i in *.fastq.gz; do mv $i $(sed "s/S[0-9][0-9]/S1/" <(echo $i)); done
