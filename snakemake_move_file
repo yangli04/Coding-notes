@@ -1,0 +1,40 @@
+When defining a rule in Snakefile but without any modifications of the input file i.e. moving input file in output, please use the full path or just mv instead of creating a soft link. 
+
+e.g.
+The correct one: 
+```
+rule filter_and_trim_reads_C:
+    input:
+        r1="cutadapt_PE/trim_UMI/trimmed_umi_dedup_{sample}_R1.fq.gz",
+        r2="cutadapt_PE/trim_UMI/trimmed_umi_dedup_{sample}_R2.fq.gz",
+    output:
+        r1_trimmed="cutadapt_PE/filtered/filtered_{sample}_R1.fq.gz",
+        r2_trimmed="cutadapt_PE/filtered/filtered_{sample}_R2.fq.gz",
+    wildcard_constraints:
+        sample="C[0-3]"
+    shell:
+        """
+        mv {input.r1} {output.r1_trimmed}
+        mv {input.r2} {output.r2_trimmed}
+        """
+```
+
+The wrong one: 
+```
+rule filter_and_trim_reads_C:
+    input:
+        r1="cutadapt_PE/trim_UMI/trimmed_umi_dedup_{sample}_R1.fq.gz",
+        r2="cutadapt_PE/trim_UMI/trimmed_umi_dedup_{sample}_R2.fq.gz",
+    output:
+        r1_trimmed="cutadapt_PE/filtered/filtered_{sample}_R1.fq.gz",
+        r2_trimmed="cutadapt_PE/filtered/filtered_{sample}_R2.fq.gz",
+    wildcard_constraints:
+        sample="C[0-3]"
+    shell:
+        """
+        ln -s {input.r1} {output.r1_trimmed}
+        ln -s {input.r2} {output.r2_trimmed}
+        """
+```
+
+Since the created link will point to cutadapt_PE/trim_UMI/trimmed_umi_dedup_{sample}_R1.fq.gz, which is usually finded. If use the full path, the rule might work, but moving it directly would be a better solution. 
