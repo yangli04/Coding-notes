@@ -1,0 +1,1 @@
+sbatch --dependency=afterok:12345 my_second_job_script.sh submit a job depend on another’s finish. 
